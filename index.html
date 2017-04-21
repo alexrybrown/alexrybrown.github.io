@@ -11561,22 +11561,22 @@ var _user$project$Asteroids$update = F2(
 	function (msg, model) {
 		var _p7 = msg;
 		switch (_p7.ctor) {
-			case 'Delta':
-				return {
-					ctor: '_Tuple2',
-					_0: A2(_user$project$Asteroids$applyPhysics, _p7._0, model),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
 			case 'KeyDown':
 				return {
 					ctor: '_Tuple2',
 					_0: A2(_user$project$Asteroids$keyDown, _p7._0, model),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'KeyUp':
 				return {
 					ctor: '_Tuple2',
 					_0: A2(_user$project$Asteroids$keyUp, _p7._0, model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_user$project$Asteroids$applyPhysics, _p7._0, model),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
@@ -11591,9 +11591,6 @@ var _user$project$Asteroids$Ship = F5(
 	function (a, b, c, d, e) {
 		return {x: a, y: b, velocity: c, acceleration: d, rotation: e};
 	});
-var _user$project$Asteroids$Dimensions = function (a) {
-	return {width: a};
-};
 var _user$project$Asteroids$KeyUp = function (a) {
 	return {ctor: 'KeyUp', _0: a};
 };
