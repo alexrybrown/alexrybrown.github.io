@@ -1,11 +1,19 @@
 module Asteroids exposing (..)
 
+
+-- Using color to create colors for the screen and ship
 import Color exposing (..)
+-- Using collage to draw onto the screen
 import Collage exposing (..)
+-- Using element to create our container and render to Html
 import Element exposing (..)
+-- Using html to create our program
 import Html exposing (..)
+-- Using keyboard to track key ups and key downs
 import Keyboard exposing (KeyCode)
+-- Using animation frame to track time diffs
 import AnimationFrame
+-- Using time as the type for animation frame diffs
 import Time exposing (Time)
 
 
@@ -24,6 +32,7 @@ type alias Model =
   { ship : Ship
   }
 
+-- Any thing that can move around the screen.
 type alias PhysicsObject a =
   { a |
     x : Float,
@@ -40,9 +49,6 @@ type alias Ship =
   , acceleration : Float
   , rotation : Int
   }
-
-type alias Dimensions =
-  { width : Int}
 
 
 spaceship : Ship
@@ -77,14 +83,14 @@ type Msg =
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Delta dt ->
-      (applyPhysics dt model, Cmd.none)
-
     KeyDown keyCode ->
       (keyDown keyCode model, Cmd.none)
 
     KeyUp keyCode ->
       (keyUp keyCode model, Cmd.none)
+
+    Delta dt ->
+      (applyPhysics dt model, Cmd.none)
 
 
 keyDown : KeyCode -> Model -> Model
@@ -130,20 +136,16 @@ keyDown keyCode model =
       model
 
 
+-- Currently no key up messages are needed.
 keyUp : KeyCode -> Model -> Model
 keyUp keyCode model =
   case keyCode of
-    -- ArrowLeft
-    -- 37 ->
-    --   updateAcceleration 0 model
-    -- ArrowRight
-    -- 39 ->
-    --   updateAcceleration 0 model
 
     _ ->
       model
 
 
+-- Applies velocity and position to our objects.
 applyPhysics : Float -> Model -> Model
 applyPhysics dt model =
   { model | ship = applyPhysicsHelper dt model.ship }
@@ -207,6 +209,7 @@ updateAccelerationShip addAcceleration ship =
     { ship | acceleration = newAcceleration }
 
 
+-- Update the rotation of rotatable things like our ship.
 updateRotation : Int -> Model -> Model
 updateRotation addRot model =
   { model | ship = updateRotationShip addRot model.ship }
@@ -224,9 +227,8 @@ updateRotationShip addRot ship =
 
 -- VIEW
 
+-- Draws a black box and a circle that you can control
 view : Model -> Html Msg
--- view model =
---   Html.text (toString model)
 view model =
   let
     { ship } = model
@@ -243,7 +245,7 @@ view model =
 
 
 -- SUBSCRIPTIONS
-
+-- Keeping track of time and key presses.
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
