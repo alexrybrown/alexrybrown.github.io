@@ -6592,6 +6592,384 @@ return {
 };
 
 }();
+var _elm_lang$core$Random$onSelfMsg = F3(
+	function (_p1, _p0, seed) {
+		return _elm_lang$core$Task$succeed(seed);
+	});
+var _elm_lang$core$Random$magicNum8 = 2147483562;
+var _elm_lang$core$Random$range = function (_p2) {
+	return {ctor: '_Tuple2', _0: 0, _1: _elm_lang$core$Random$magicNum8};
+};
+var _elm_lang$core$Random$magicNum7 = 2147483399;
+var _elm_lang$core$Random$magicNum6 = 2147483563;
+var _elm_lang$core$Random$magicNum5 = 3791;
+var _elm_lang$core$Random$magicNum4 = 40692;
+var _elm_lang$core$Random$magicNum3 = 52774;
+var _elm_lang$core$Random$magicNum2 = 12211;
+var _elm_lang$core$Random$magicNum1 = 53668;
+var _elm_lang$core$Random$magicNum0 = 40014;
+var _elm_lang$core$Random$step = F2(
+	function (_p3, seed) {
+		var _p4 = _p3;
+		return _p4._0(seed);
+	});
+var _elm_lang$core$Random$onEffects = F3(
+	function (router, commands, seed) {
+		var _p5 = commands;
+		if (_p5.ctor === '[]') {
+			return _elm_lang$core$Task$succeed(seed);
+		} else {
+			var _p6 = A2(_elm_lang$core$Random$step, _p5._0._0, seed);
+			var value = _p6._0;
+			var newSeed = _p6._1;
+			return A2(
+				_elm_lang$core$Task$andThen,
+				function (_p7) {
+					return A3(_elm_lang$core$Random$onEffects, router, _p5._1, newSeed);
+				},
+				A2(_elm_lang$core$Platform$sendToApp, router, value));
+		}
+	});
+var _elm_lang$core$Random$listHelp = F4(
+	function (list, n, generate, seed) {
+		listHelp:
+		while (true) {
+			if (_elm_lang$core$Native_Utils.cmp(n, 1) < 0) {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$List$reverse(list),
+					_1: seed
+				};
+			} else {
+				var _p8 = generate(seed);
+				var value = _p8._0;
+				var newSeed = _p8._1;
+				var _v2 = {ctor: '::', _0: value, _1: list},
+					_v3 = n - 1,
+					_v4 = generate,
+					_v5 = newSeed;
+				list = _v2;
+				n = _v3;
+				generate = _v4;
+				seed = _v5;
+				continue listHelp;
+			}
+		}
+	});
+var _elm_lang$core$Random$minInt = -2147483648;
+var _elm_lang$core$Random$maxInt = 2147483647;
+var _elm_lang$core$Random$iLogBase = F2(
+	function (b, i) {
+		return (_elm_lang$core$Native_Utils.cmp(i, b) < 0) ? 1 : (1 + A2(_elm_lang$core$Random$iLogBase, b, (i / b) | 0));
+	});
+var _elm_lang$core$Random$command = _elm_lang$core$Native_Platform.leaf('Random');
+var _elm_lang$core$Random$Generator = function (a) {
+	return {ctor: 'Generator', _0: a};
+};
+var _elm_lang$core$Random$list = F2(
+	function (n, _p9) {
+		var _p10 = _p9;
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				return A4(
+					_elm_lang$core$Random$listHelp,
+					{ctor: '[]'},
+					n,
+					_p10._0,
+					seed);
+			});
+	});
+var _elm_lang$core$Random$map = F2(
+	function (func, _p11) {
+		var _p12 = _p11;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p13 = _p12._0(seed0);
+				var a = _p13._0;
+				var seed1 = _p13._1;
+				return {
+					ctor: '_Tuple2',
+					_0: func(a),
+					_1: seed1
+				};
+			});
+	});
+var _elm_lang$core$Random$map2 = F3(
+	function (func, _p15, _p14) {
+		var _p16 = _p15;
+		var _p17 = _p14;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p18 = _p16._0(seed0);
+				var a = _p18._0;
+				var seed1 = _p18._1;
+				var _p19 = _p17._0(seed1);
+				var b = _p19._0;
+				var seed2 = _p19._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A2(func, a, b),
+					_1: seed2
+				};
+			});
+	});
+var _elm_lang$core$Random$pair = F2(
+	function (genA, genB) {
+		return A3(
+			_elm_lang$core$Random$map2,
+			F2(
+				function (v0, v1) {
+					return {ctor: '_Tuple2', _0: v0, _1: v1};
+				}),
+			genA,
+			genB);
+	});
+var _elm_lang$core$Random$map3 = F4(
+	function (func, _p22, _p21, _p20) {
+		var _p23 = _p22;
+		var _p24 = _p21;
+		var _p25 = _p20;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p26 = _p23._0(seed0);
+				var a = _p26._0;
+				var seed1 = _p26._1;
+				var _p27 = _p24._0(seed1);
+				var b = _p27._0;
+				var seed2 = _p27._1;
+				var _p28 = _p25._0(seed2);
+				var c = _p28._0;
+				var seed3 = _p28._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A3(func, a, b, c),
+					_1: seed3
+				};
+			});
+	});
+var _elm_lang$core$Random$map4 = F5(
+	function (func, _p32, _p31, _p30, _p29) {
+		var _p33 = _p32;
+		var _p34 = _p31;
+		var _p35 = _p30;
+		var _p36 = _p29;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p37 = _p33._0(seed0);
+				var a = _p37._0;
+				var seed1 = _p37._1;
+				var _p38 = _p34._0(seed1);
+				var b = _p38._0;
+				var seed2 = _p38._1;
+				var _p39 = _p35._0(seed2);
+				var c = _p39._0;
+				var seed3 = _p39._1;
+				var _p40 = _p36._0(seed3);
+				var d = _p40._0;
+				var seed4 = _p40._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A4(func, a, b, c, d),
+					_1: seed4
+				};
+			});
+	});
+var _elm_lang$core$Random$map5 = F6(
+	function (func, _p45, _p44, _p43, _p42, _p41) {
+		var _p46 = _p45;
+		var _p47 = _p44;
+		var _p48 = _p43;
+		var _p49 = _p42;
+		var _p50 = _p41;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p51 = _p46._0(seed0);
+				var a = _p51._0;
+				var seed1 = _p51._1;
+				var _p52 = _p47._0(seed1);
+				var b = _p52._0;
+				var seed2 = _p52._1;
+				var _p53 = _p48._0(seed2);
+				var c = _p53._0;
+				var seed3 = _p53._1;
+				var _p54 = _p49._0(seed3);
+				var d = _p54._0;
+				var seed4 = _p54._1;
+				var _p55 = _p50._0(seed4);
+				var e = _p55._0;
+				var seed5 = _p55._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A5(func, a, b, c, d, e),
+					_1: seed5
+				};
+			});
+	});
+var _elm_lang$core$Random$andThen = F2(
+	function (callback, _p56) {
+		var _p57 = _p56;
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				var _p58 = _p57._0(seed);
+				var result = _p58._0;
+				var newSeed = _p58._1;
+				var _p59 = callback(result);
+				var genB = _p59._0;
+				return genB(newSeed);
+			});
+	});
+var _elm_lang$core$Random$State = F2(
+	function (a, b) {
+		return {ctor: 'State', _0: a, _1: b};
+	});
+var _elm_lang$core$Random$initState = function (seed) {
+	var s = A2(_elm_lang$core$Basics$max, seed, 0 - seed);
+	var q = (s / (_elm_lang$core$Random$magicNum6 - 1)) | 0;
+	var s2 = A2(_elm_lang$core$Basics_ops['%'], q, _elm_lang$core$Random$magicNum7 - 1);
+	var s1 = A2(_elm_lang$core$Basics_ops['%'], s, _elm_lang$core$Random$magicNum6 - 1);
+	return A2(_elm_lang$core$Random$State, s1 + 1, s2 + 1);
+};
+var _elm_lang$core$Random$next = function (_p60) {
+	var _p61 = _p60;
+	var _p63 = _p61._1;
+	var _p62 = _p61._0;
+	var k2 = (_p63 / _elm_lang$core$Random$magicNum3) | 0;
+	var rawState2 = (_elm_lang$core$Random$magicNum4 * (_p63 - (k2 * _elm_lang$core$Random$magicNum3))) - (k2 * _elm_lang$core$Random$magicNum5);
+	var newState2 = (_elm_lang$core$Native_Utils.cmp(rawState2, 0) < 0) ? (rawState2 + _elm_lang$core$Random$magicNum7) : rawState2;
+	var k1 = (_p62 / _elm_lang$core$Random$magicNum1) | 0;
+	var rawState1 = (_elm_lang$core$Random$magicNum0 * (_p62 - (k1 * _elm_lang$core$Random$magicNum1))) - (k1 * _elm_lang$core$Random$magicNum2);
+	var newState1 = (_elm_lang$core$Native_Utils.cmp(rawState1, 0) < 0) ? (rawState1 + _elm_lang$core$Random$magicNum6) : rawState1;
+	var z = newState1 - newState2;
+	var newZ = (_elm_lang$core$Native_Utils.cmp(z, 1) < 0) ? (z + _elm_lang$core$Random$magicNum8) : z;
+	return {
+		ctor: '_Tuple2',
+		_0: newZ,
+		_1: A2(_elm_lang$core$Random$State, newState1, newState2)
+	};
+};
+var _elm_lang$core$Random$split = function (_p64) {
+	var _p65 = _p64;
+	var _p68 = _p65._1;
+	var _p67 = _p65._0;
+	var _p66 = _elm_lang$core$Tuple$second(
+		_elm_lang$core$Random$next(_p65));
+	var t1 = _p66._0;
+	var t2 = _p66._1;
+	var new_s2 = _elm_lang$core$Native_Utils.eq(_p68, 1) ? (_elm_lang$core$Random$magicNum7 - 1) : (_p68 - 1);
+	var new_s1 = _elm_lang$core$Native_Utils.eq(_p67, _elm_lang$core$Random$magicNum6 - 1) ? 1 : (_p67 + 1);
+	return {
+		ctor: '_Tuple2',
+		_0: A2(_elm_lang$core$Random$State, new_s1, t2),
+		_1: A2(_elm_lang$core$Random$State, t1, new_s2)
+	};
+};
+var _elm_lang$core$Random$Seed = function (a) {
+	return {ctor: 'Seed', _0: a};
+};
+var _elm_lang$core$Random$int = F2(
+	function (a, b) {
+		return _elm_lang$core$Random$Generator(
+			function (_p69) {
+				var _p70 = _p69;
+				var _p75 = _p70._0;
+				var base = 2147483561;
+				var f = F3(
+					function (n, acc, state) {
+						f:
+						while (true) {
+							var _p71 = n;
+							if (_p71 === 0) {
+								return {ctor: '_Tuple2', _0: acc, _1: state};
+							} else {
+								var _p72 = _p75.next(state);
+								var x = _p72._0;
+								var nextState = _p72._1;
+								var _v27 = n - 1,
+									_v28 = x + (acc * base),
+									_v29 = nextState;
+								n = _v27;
+								acc = _v28;
+								state = _v29;
+								continue f;
+							}
+						}
+					});
+				var _p73 = (_elm_lang$core$Native_Utils.cmp(a, b) < 0) ? {ctor: '_Tuple2', _0: a, _1: b} : {ctor: '_Tuple2', _0: b, _1: a};
+				var lo = _p73._0;
+				var hi = _p73._1;
+				var k = (hi - lo) + 1;
+				var n = A2(_elm_lang$core$Random$iLogBase, base, k);
+				var _p74 = A3(f, n, 1, _p75.state);
+				var v = _p74._0;
+				var nextState = _p74._1;
+				return {
+					ctor: '_Tuple2',
+					_0: lo + A2(_elm_lang$core$Basics_ops['%'], v, k),
+					_1: _elm_lang$core$Random$Seed(
+						_elm_lang$core$Native_Utils.update(
+							_p75,
+							{state: nextState}))
+				};
+			});
+	});
+var _elm_lang$core$Random$bool = A2(
+	_elm_lang$core$Random$map,
+	F2(
+		function (x, y) {
+			return _elm_lang$core$Native_Utils.eq(x, y);
+		})(1),
+	A2(_elm_lang$core$Random$int, 0, 1));
+var _elm_lang$core$Random$float = F2(
+	function (a, b) {
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				var _p76 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$int, _elm_lang$core$Random$minInt, _elm_lang$core$Random$maxInt),
+					seed);
+				var number = _p76._0;
+				var newSeed = _p76._1;
+				var negativeOneToOne = _elm_lang$core$Basics$toFloat(number) / _elm_lang$core$Basics$toFloat(_elm_lang$core$Random$maxInt - _elm_lang$core$Random$minInt);
+				var _p77 = (_elm_lang$core$Native_Utils.cmp(a, b) < 0) ? {ctor: '_Tuple2', _0: a, _1: b} : {ctor: '_Tuple2', _0: b, _1: a};
+				var lo = _p77._0;
+				var hi = _p77._1;
+				var scaled = ((lo + hi) / 2) + ((hi - lo) * negativeOneToOne);
+				return {ctor: '_Tuple2', _0: scaled, _1: newSeed};
+			});
+	});
+var _elm_lang$core$Random$initialSeed = function (n) {
+	return _elm_lang$core$Random$Seed(
+		{
+			state: _elm_lang$core$Random$initState(n),
+			next: _elm_lang$core$Random$next,
+			split: _elm_lang$core$Random$split,
+			range: _elm_lang$core$Random$range
+		});
+};
+var _elm_lang$core$Random$init = A2(
+	_elm_lang$core$Task$andThen,
+	function (t) {
+		return _elm_lang$core$Task$succeed(
+			_elm_lang$core$Random$initialSeed(
+				_elm_lang$core$Basics$round(t)));
+	},
+	_elm_lang$core$Time$now);
+var _elm_lang$core$Random$Generate = function (a) {
+	return {ctor: 'Generate', _0: a};
+};
+var _elm_lang$core$Random$generate = F2(
+	function (tagger, generator) {
+		return _elm_lang$core$Random$command(
+			_elm_lang$core$Random$Generate(
+				A2(_elm_lang$core$Random$map, tagger, generator)));
+	});
+var _elm_lang$core$Random$cmdMap = F2(
+	function (func, _p78) {
+		var _p79 = _p78;
+		return _elm_lang$core$Random$Generate(
+			A2(_elm_lang$core$Random$map, func, _p79._0));
+	});
+_elm_lang$core$Native_Platform.effectManagers['Random'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Random$init, onEffects: _elm_lang$core$Random$onEffects, onSelfMsg: _elm_lang$core$Random$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Random$cmdMap};
 var _elm_lang$core$Regex$split = _elm_lang$core$Native_Regex.split;
 var _elm_lang$core$Regex$replace = _elm_lang$core$Native_Regex.replace;
 var _elm_lang$core$Regex$find = _elm_lang$core$Native_Regex.find;
@@ -6608,6 +6986,136 @@ var _elm_lang$core$Regex$AtMost = function (a) {
 	return {ctor: 'AtMost', _0: a};
 };
 var _elm_lang$core$Regex$All = {ctor: 'All'};
+var _elm_lang$core$Set$foldr = F3(
+	function (f, b, _p0) {
+		var _p1 = _p0;
+		return A3(
+			_elm_lang$core$Dict$foldr,
+			F3(
+				function (k, _p2, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p1._0);
+	});
+var _elm_lang$core$Set$foldl = F3(
+	function (f, b, _p3) {
+		var _p4 = _p3;
+		return A3(
+			_elm_lang$core$Dict$foldl,
+			F3(
+				function (k, _p5, b) {
+					return A2(f, k, b);
+				}),
+			b,
+			_p4._0);
+	});
+var _elm_lang$core$Set$toList = function (_p6) {
+	var _p7 = _p6;
+	return _elm_lang$core$Dict$keys(_p7._0);
+};
+var _elm_lang$core$Set$size = function (_p8) {
+	var _p9 = _p8;
+	return _elm_lang$core$Dict$size(_p9._0);
+};
+var _elm_lang$core$Set$member = F2(
+	function (k, _p10) {
+		var _p11 = _p10;
+		return A2(_elm_lang$core$Dict$member, k, _p11._0);
+	});
+var _elm_lang$core$Set$isEmpty = function (_p12) {
+	var _p13 = _p12;
+	return _elm_lang$core$Dict$isEmpty(_p13._0);
+};
+var _elm_lang$core$Set$Set_elm_builtin = function (a) {
+	return {ctor: 'Set_elm_builtin', _0: a};
+};
+var _elm_lang$core$Set$empty = _elm_lang$core$Set$Set_elm_builtin(_elm_lang$core$Dict$empty);
+var _elm_lang$core$Set$singleton = function (k) {
+	return _elm_lang$core$Set$Set_elm_builtin(
+		A2(
+			_elm_lang$core$Dict$singleton,
+			k,
+			{ctor: '_Tuple0'}));
+};
+var _elm_lang$core$Set$insert = F2(
+	function (k, _p14) {
+		var _p15 = _p14;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A3(
+				_elm_lang$core$Dict$insert,
+				k,
+				{ctor: '_Tuple0'},
+				_p15._0));
+	});
+var _elm_lang$core$Set$fromList = function (xs) {
+	return A3(_elm_lang$core$List$foldl, _elm_lang$core$Set$insert, _elm_lang$core$Set$empty, xs);
+};
+var _elm_lang$core$Set$map = F2(
+	function (f, s) {
+		return _elm_lang$core$Set$fromList(
+			A2(
+				_elm_lang$core$List$map,
+				f,
+				_elm_lang$core$Set$toList(s)));
+	});
+var _elm_lang$core$Set$remove = F2(
+	function (k, _p16) {
+		var _p17 = _p16;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$remove, k, _p17._0));
+	});
+var _elm_lang$core$Set$union = F2(
+	function (_p19, _p18) {
+		var _p20 = _p19;
+		var _p21 = _p18;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$union, _p20._0, _p21._0));
+	});
+var _elm_lang$core$Set$intersect = F2(
+	function (_p23, _p22) {
+		var _p24 = _p23;
+		var _p25 = _p22;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$intersect, _p24._0, _p25._0));
+	});
+var _elm_lang$core$Set$diff = F2(
+	function (_p27, _p26) {
+		var _p28 = _p27;
+		var _p29 = _p26;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(_elm_lang$core$Dict$diff, _p28._0, _p29._0));
+	});
+var _elm_lang$core$Set$filter = F2(
+	function (p, _p30) {
+		var _p31 = _p30;
+		return _elm_lang$core$Set$Set_elm_builtin(
+			A2(
+				_elm_lang$core$Dict$filter,
+				F2(
+					function (k, _p32) {
+						return p(k);
+					}),
+				_p31._0));
+	});
+var _elm_lang$core$Set$partition = F2(
+	function (p, _p33) {
+		var _p34 = _p33;
+		var _p35 = A2(
+			_elm_lang$core$Dict$partition,
+			F2(
+				function (k, _p36) {
+					return p(k);
+				}),
+			_p34._0);
+		var p1 = _p35._0;
+		var p2 = _p35._1;
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Set$Set_elm_builtin(p1),
+			_1: _elm_lang$core$Set$Set_elm_builtin(p2)
+		};
+	});
 var _elm_lang$dom$Native_Dom = function() {
 
 var fakeNode = {
@@ -11436,37 +11944,102 @@ var _evancz$elm_graphics$Collage$ngon = F2(
 				f,
 				A2(_elm_lang$core$List$range, 0, n - 1)));
 	});
-var _user$project$Asteroids$view = function (model) {
-	var _p0 = model;
-	var ship = _p0.ship;
-	return _evancz$elm_graphics$Element$toHtml(
-		A4(
-			_evancz$elm_graphics$Element$container,
-			1000,
-			1000,
-			_evancz$elm_graphics$Element$middle,
-			A3(
-				_evancz$elm_graphics$Collage$collage,
-				1000,
-				1000,
-				{
-					ctor: '::',
-					_0: A2(
-						_evancz$elm_graphics$Collage$filled,
-						A3(_elm_lang$core$Color$rgb, 0, 0, 0),
-						A2(_evancz$elm_graphics$Collage$rect, 1000, 1000)),
-					_1: {
+var _user$project$Asteroids$badBullet = {x: -1, y: -1, velocity: -1, rotation: -1};
+var _user$project$Asteroids$showBullets = F2(
+	function (bullets, acc) {
+		showBullets:
+		while (true) {
+			if (_elm_lang$core$List$isEmpty(bullets)) {
+				return acc;
+			} else {
+				var rest = A2(
+					_elm_lang$core$Maybe$withDefault,
+					{ctor: '[]'},
+					_elm_lang$core$List$tail(bullets));
+				var bullet = A2(
+					_elm_lang$core$Maybe$withDefault,
+					_user$project$Asteroids$badBullet,
+					_elm_lang$core$List$head(bullets));
+				if (!_elm_lang$core$Native_Utils.eq(bullet, _user$project$Asteroids$badBullet)) {
+					var _v0 = rest,
+						_v1 = {
 						ctor: '::',
 						_0: A2(
 							_evancz$elm_graphics$Collage$move,
-							{ctor: '_Tuple2', _0: ship.x, _1: ship.y},
+							{ctor: '_Tuple2', _0: bullet.x, _1: bullet.y},
 							A2(
 								_evancz$elm_graphics$Collage$filled,
-								_elm_lang$core$Color$white,
-								A2(_evancz$elm_graphics$Collage$oval, 15, 15))),
-						_1: {ctor: '[]'}
-					}
-				})));
+								_elm_lang$core$Color$red,
+								A2(_evancz$elm_graphics$Collage$oval, 5, 5))),
+						_1: acc
+					};
+					bullets = _v0;
+					acc = _v1;
+					continue showBullets;
+				} else {
+					var _v2 = rest,
+						_v3 = acc;
+					bullets = _v2;
+					acc = _v3;
+					continue showBullets;
+				}
+			}
+		}
+	});
+var _user$project$Asteroids$view = function (model) {
+	var _p0 = model;
+	var ship = _p0.ship;
+	var _p1 = ship;
+	var bullets = _p1.bullets;
+	return _evancz$elm_graphics$Element$toHtml(
+		A4(
+			_evancz$elm_graphics$Element$container,
+			model.windowWidth,
+			model.windowHeight,
+			_evancz$elm_graphics$Element$middle,
+			A3(
+				_evancz$elm_graphics$Collage$collage,
+				model.windowWidth,
+				model.windowHeight,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					{
+						ctor: '::',
+						_0: A2(
+							_evancz$elm_graphics$Collage$filled,
+							A3(_elm_lang$core$Color$rgb, 0, 0, 0),
+							A2(
+								_evancz$elm_graphics$Collage$rect,
+								_elm_lang$core$Basics$toFloat(model.windowWidth),
+								_elm_lang$core$Basics$toFloat(model.windowHeight))),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_evancz$elm_graphics$Collage$move,
+								{ctor: '_Tuple2', _0: ship.x, _1: ship.y},
+								A2(
+									_evancz$elm_graphics$Collage$filled,
+									_elm_lang$core$Color$white,
+									A2(_evancz$elm_graphics$Collage$oval, 15, 15))),
+							_1: {ctor: '[]'}
+						}
+					},
+					A2(
+						_user$project$Asteroids$showBullets,
+						bullets,
+						{ctor: '[]'})))));
+};
+var _user$project$Asteroids$fireShot = function (ship) {
+	var _p2 = ship;
+	var bullets = _p2.bullets;
+	var newBullets = {
+		ctor: '::',
+		_0: {x: ship.x, y: ship.y, velocity: 0.3, rotation: ship.rotation},
+		_1: bullets
+	};
+	return _elm_lang$core$Native_Utils.update(
+		ship,
+		{bullets: newBullets, shotFired: true});
 };
 var _user$project$Asteroids$updateRotationShip = F2(
 	function (addRot, ship) {
@@ -11487,110 +12060,300 @@ var _user$project$Asteroids$updateRotation = F2(
 var _user$project$Asteroids$updateAccelerationShip = F2(
 	function (addAcceleration, ship) {
 		var calculatedAcceleration = ship.acceleration + addAcceleration;
-		var newAcceleration = ((_elm_lang$core$Native_Utils.cmp(calculatedAcceleration, -1.0e-3) > -1) && (_elm_lang$core$Native_Utils.cmp(calculatedAcceleration, 1.0e-3) < 1)) ? calculatedAcceleration : ((_elm_lang$core$Native_Utils.cmp(calculatedAcceleration, -1.0e-3) < 0) ? -1.0e-3 : 1.0e-3);
+		var newAcceleration = ((_elm_lang$core$Native_Utils.cmp(ship.velocity, 0) < 1) && (_elm_lang$core$Native_Utils.cmp(calculatedAcceleration, 0) < 1)) ? 0 : (((_elm_lang$core$Native_Utils.cmp(calculatedAcceleration, -1.0e-3) > -1) && (_elm_lang$core$Native_Utils.cmp(calculatedAcceleration, 1.0e-3) < 1)) ? calculatedAcceleration : ((_elm_lang$core$Native_Utils.cmp(calculatedAcceleration, -1.0e-3) < 0) ? -1.0e-3 : 1.0e-3));
 		return _elm_lang$core$Native_Utils.update(
 			ship,
 			{acceleration: newAcceleration});
 	});
-var _user$project$Asteroids$applyPhysicsHelper = F2(
-	function (dt, phyObj) {
-		var calculatedVelocity = phyObj.velocity + (phyObj.acceleration * dt);
-		var newVelocity = ((_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0) > -1) && (_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0.1) < 1)) ? calculatedVelocity : ((_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0) < 0) ? 0 : 0.1);
-		var calculatedXPosition = phyObj.x + ((dt * _elm_lang$core$Basics$cos(
+var _user$project$Asteroids$checkBulletOutOfBounds = F3(
+	function (model, bullets, acc) {
+		checkBulletOutOfBounds:
+		while (true) {
+			if (_elm_lang$core$List$isEmpty(bullets)) {
+				return acc;
+			} else {
+				var rest = A2(
+					_elm_lang$core$Maybe$withDefault,
+					{ctor: '[]'},
+					_elm_lang$core$List$tail(bullets));
+				var bullet = A2(
+					_elm_lang$core$Maybe$withDefault,
+					_user$project$Asteroids$badBullet,
+					_elm_lang$core$List$head(bullets));
+				if ((_elm_lang$core$Native_Utils.cmp(
+					bullet.x,
+					(0 - _elm_lang$core$Basics$toFloat(model.windowWidth)) / 2) > -1) && ((_elm_lang$core$Native_Utils.cmp(
+					bullet.x,
+					_elm_lang$core$Basics$toFloat(model.windowWidth) / 2) < 1) && ((_elm_lang$core$Native_Utils.cmp(
+					bullet.y,
+					(0 - _elm_lang$core$Basics$toFloat(model.windowHeight)) / 2) > -1) && (_elm_lang$core$Native_Utils.cmp(
+					bullet.y,
+					_elm_lang$core$Basics$toFloat(model.windowHeight) / 2) < 1)))) {
+					var _v4 = model,
+						_v5 = rest,
+						_v6 = {ctor: '::', _0: bullet, _1: acc};
+					model = _v4;
+					bullets = _v5;
+					acc = _v6;
+					continue checkBulletOutOfBounds;
+				} else {
+					var _v7 = model,
+						_v8 = rest,
+						_v9 = acc;
+					model = _v7;
+					bullets = _v8;
+					acc = _v9;
+					continue checkBulletOutOfBounds;
+				}
+			}
+		}
+	});
+var _user$project$Asteroids$applyBulletPhysics = F2(
+	function (dt, bullet) {
+		var _p3 = bullet;
+		var velocity = _p3.velocity;
+		var calculatedXPosition = ((_elm_lang$core$Basics$cos(
 			_elm_lang$core$Basics$degrees(
-				_elm_lang$core$Basics$toFloat(phyObj.rotation)))) * newVelocity);
-		var newXPosition = ((_elm_lang$core$Native_Utils.cmp(calculatedXPosition, -500) > -1) && (_elm_lang$core$Native_Utils.cmp(calculatedXPosition, 500) < 1)) ? calculatedXPosition : ((_elm_lang$core$Native_Utils.cmp(calculatedXPosition, -500) < 0) ? 500 : -500);
-		var calculatedYPosition = phyObj.y + ((dt * _elm_lang$core$Basics$sin(
+				_elm_lang$core$Basics$toFloat(bullet.rotation))) * velocity) * dt) + bullet.x;
+		var calculatedYPosition = ((_elm_lang$core$Basics$sin(
 			_elm_lang$core$Basics$degrees(
-				_elm_lang$core$Basics$toFloat(phyObj.rotation)))) * newVelocity);
-		var newYPosition = ((_elm_lang$core$Native_Utils.cmp(calculatedYPosition, -500) > -1) && (_elm_lang$core$Native_Utils.cmp(calculatedYPosition, 500) < 1)) ? calculatedYPosition : ((_elm_lang$core$Native_Utils.cmp(calculatedYPosition, -500) < 0) ? 500 : -500);
+				_elm_lang$core$Basics$toFloat(bullet.rotation))) * velocity) * dt) + bullet.y;
 		return _elm_lang$core$Native_Utils.update(
-			phyObj,
+			bullet,
+			{x: calculatedXPosition, y: calculatedYPosition});
+	});
+var _user$project$Asteroids$applyPhysicsBullets = F3(
+	function (model, dt, bullets) {
+		return A2(
+			_elm_lang$core$List$map,
+			_user$project$Asteroids$applyBulletPhysics(dt),
+			A3(
+				_user$project$Asteroids$checkBulletOutOfBounds,
+				model,
+				bullets,
+				{ctor: '[]'}));
+	});
+var _user$project$Asteroids$checkKeysHelper = F2(
+	function (model, keyCodes) {
+		checkKeysHelper:
+		while (true) {
+			if (_elm_lang$core$List$isEmpty(keyCodes)) {
+				return model;
+			} else {
+				var rest = A2(
+					_elm_lang$core$Maybe$withDefault,
+					{ctor: '[]'},
+					_elm_lang$core$List$tail(keyCodes));
+				var keyCode = A2(
+					_elm_lang$core$Maybe$withDefault,
+					-1,
+					_elm_lang$core$List$head(keyCodes));
+				if (!_elm_lang$core$Native_Utils.eq(keyCode, -1)) {
+					var _p4 = keyCode;
+					switch (_p4) {
+						case 37:
+							var _p5 = model;
+							var ship = _p5.ship;
+							var newShip = A2(_user$project$Asteroids$updateAccelerationShip, -1.0e-4, ship);
+							var _v11 = _elm_lang$core$Native_Utils.update(
+								model,
+								{ship: newShip}),
+								_v12 = rest;
+							model = _v11;
+							keyCodes = _v12;
+							continue checkKeysHelper;
+						case 39:
+							var _p6 = model;
+							var ship = _p6.ship;
+							var newShip = A2(_user$project$Asteroids$updateAccelerationShip, 1.0e-4, ship);
+							var _v13 = _elm_lang$core$Native_Utils.update(
+								model,
+								{ship: newShip}),
+								_v14 = rest;
+							model = _v13;
+							keyCodes = _v14;
+							continue checkKeysHelper;
+						case 38:
+							var _p7 = model;
+							var ship = _p7.ship;
+							var newShip = A2(_user$project$Asteroids$updateRotationShip, 3, ship);
+							var _v15 = _elm_lang$core$Native_Utils.update(
+								model,
+								{ship: newShip}),
+								_v16 = rest;
+							model = _v15;
+							keyCodes = _v16;
+							continue checkKeysHelper;
+						case 40:
+							var _p8 = model;
+							var ship = _p8.ship;
+							var newShip = A2(_user$project$Asteroids$updateRotationShip, -3, ship);
+							var _v17 = _elm_lang$core$Native_Utils.update(
+								model,
+								{ship: newShip}),
+								_v18 = rest;
+							model = _v17;
+							keyCodes = _v18;
+							continue checkKeysHelper;
+						default:
+							var _v19 = model,
+								_v20 = rest;
+							model = _v19;
+							keyCodes = _v20;
+							continue checkKeysHelper;
+					}
+				} else {
+					var _v21 = model,
+						_v22 = rest;
+					model = _v21;
+					keyCodes = _v22;
+					continue checkKeysHelper;
+				}
+			}
+		}
+	});
+var _user$project$Asteroids$checkKeys = function (model) {
+	var _p9 = model;
+	var ship = _p9.ship;
+	var newShip = ((!A2(_elm_lang$core$Set$member, 32, model.keyDowns)) && model.ship.shotFired) ? _elm_lang$core$Native_Utils.update(
+		ship,
+		{shotFired: false}) : ship;
+	var newModel = A2(
+		_user$project$Asteroids$checkKeysHelper,
+		_elm_lang$core$Native_Utils.update(
+			model,
+			{ship: newShip}),
+		_elm_lang$core$Set$toList(model.keyDowns));
+	return newModel;
+};
+var _user$project$Asteroids$keyPress = F2(
+	function (keyCode, model) {
+		var _p10 = keyCode;
+		if (_p10 === 32) {
+			return (A2(_elm_lang$core$Set$member, 32, model.keyDowns) && (!model.ship.shotFired)) ? _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					ship: _user$project$Asteroids$fireShot(model.ship)
+				}) : model;
+		} else {
+			return model;
+		}
+	});
+var _user$project$Asteroids$spaceship = {
+	x: 0,
+	y: 0,
+	velocity: 0,
+	acceleration: 0,
+	rotation: 0,
+	bullets: {ctor: '[]'},
+	shotFired: false
+};
+var _user$project$Asteroids$model = {ship: _user$project$Asteroids$spaceship, keyDowns: _elm_lang$core$Set$empty, windowHeight: 500, windowWidth: 500};
+var _user$project$Asteroids$init = {ctor: '_Tuple2', _0: _user$project$Asteroids$model, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$Asteroids$applyPhysicsShip = F2(
+	function (dt, ship) {
+		var calculatedVelocity = ship.velocity + (ship.acceleration * dt);
+		var newVelocity = ((_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0) > -1) && (_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0.2) < 1)) ? calculatedVelocity : ((_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0) < 0) ? 0 : 0.2);
+		var calculatedXPosition = (((((1 / 2) * ship.acceleration) * dt) * dt) + ((_elm_lang$core$Basics$cos(
+			_elm_lang$core$Basics$degrees(
+				_elm_lang$core$Basics$toFloat(ship.rotation))) * newVelocity) * dt)) + ship.x;
+		var newXPosition = ((_elm_lang$core$Native_Utils.cmp(
+			calculatedXPosition,
+			(0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowWidth)) / 2) > -1) && (_elm_lang$core$Native_Utils.cmp(
+			calculatedXPosition,
+			_elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowWidth) / 2) < 1)) ? calculatedXPosition : ((_elm_lang$core$Native_Utils.cmp(
+			calculatedXPosition,
+			(0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowWidth)) / 2) < 0) ? (_elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowWidth) / 2) : ((0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowWidth)) / 2));
+		var calculatedYPosition = (((((1 / 2) * ship.acceleration) * dt) * dt) + ((_elm_lang$core$Basics$sin(
+			_elm_lang$core$Basics$degrees(
+				_elm_lang$core$Basics$toFloat(ship.rotation))) * newVelocity) * dt)) + ship.y;
+		var newYPosition = ((_elm_lang$core$Native_Utils.cmp(
+			calculatedYPosition,
+			(0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowHeight)) / 2) > -1) && (_elm_lang$core$Native_Utils.cmp(
+			calculatedYPosition,
+			_elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowHeight) / 2) < 1)) ? calculatedYPosition : ((_elm_lang$core$Native_Utils.cmp(
+			calculatedYPosition,
+			(0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowHeight)) / 2) < 0) ? (_elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowHeight) / 2) : ((0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowHeight)) / 2));
+		return _elm_lang$core$Native_Utils.update(
+			ship,
 			{x: newXPosition, y: newYPosition, velocity: newVelocity});
 	});
 var _user$project$Asteroids$applyPhysics = F2(
 	function (dt, model) {
+		var _p11 = model;
+		var ship = _p11.ship;
+		var newShip = A2(_user$project$Asteroids$applyPhysicsShip, dt, ship);
+		var _p12 = newShip;
+		var bullets = _p12.bullets;
+		var newBullets = A3(_user$project$Asteroids$applyPhysicsBullets, model, dt, bullets);
 		return _elm_lang$core$Native_Utils.update(
 			model,
 			{
-				ship: A2(_user$project$Asteroids$applyPhysicsHelper, dt, model.ship)
+				ship: _elm_lang$core$Native_Utils.update(
+					newShip,
+					{bullets: newBullets})
 			});
-	});
-var _user$project$Asteroids$keyUp = F2(
-	function (keyCode, model) {
-		var _p1 = keyCode;
-		return model;
-	});
-var _user$project$Asteroids$keyDown = F2(
-	function (keyCode, model) {
-		var _p2 = keyCode;
-		switch (_p2) {
-			case 37:
-				var _p3 = model;
-				var ship = _p3.ship;
-				var newShip = A2(_user$project$Asteroids$updateAccelerationShip, -1.0e-4, ship);
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{ship: newShip});
-			case 39:
-				var _p4 = model;
-				var ship = _p4.ship;
-				var newShip = A2(_user$project$Asteroids$updateAccelerationShip, 1.0e-4, ship);
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{ship: newShip});
-			case 38:
-				var _p5 = model;
-				var ship = _p5.ship;
-				var newShip = A2(_user$project$Asteroids$updateRotationShip, 1, ship);
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{ship: newShip});
-			case 40:
-				var _p6 = model;
-				var ship = _p6.ship;
-				var newShip = A2(_user$project$Asteroids$updateRotationShip, -1, ship);
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{ship: newShip});
-			default:
-				return model;
-		}
 	});
 var _user$project$Asteroids$update = F2(
 	function (msg, model) {
-		var _p7 = msg;
-		switch (_p7.ctor) {
+		var _p13 = msg;
+		switch (_p13.ctor) {
 			case 'KeyDown':
 				return {
 					ctor: '_Tuple2',
-					_0: A2(_user$project$Asteroids$keyDown, _p7._0, model),
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							keyDowns: A2(_elm_lang$core$Set$insert, _p13._0, model.keyDowns)
+						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'KeyUp':
 				return {
 					ctor: '_Tuple2',
-					_0: A2(_user$project$Asteroids$keyUp, _p7._0, model),
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							keyDowns: A2(_elm_lang$core$Set$remove, _p13._0, model.keyDowns)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'KeyPresses':
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_user$project$Asteroids$keyPress, _p13._0, model),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
 				return {
 					ctor: '_Tuple2',
-					_0: A2(_user$project$Asteroids$applyPhysics, _p7._0, model),
+					_0: A2(
+						_user$project$Asteroids$applyPhysics,
+						_p13._0,
+						_user$project$Asteroids$checkKeys(model)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
 	});
-var _user$project$Asteroids$spaceship = {x: 0, y: 0, velocity: 0, acceleration: 0, rotation: 0};
-var _user$project$Asteroids$model = {ship: _user$project$Asteroids$spaceship};
-var _user$project$Asteroids$init = {ctor: '_Tuple2', _0: _user$project$Asteroids$model, _1: _elm_lang$core$Platform_Cmd$none};
-var _user$project$Asteroids$Model = function (a) {
-	return {ship: a};
-};
-var _user$project$Asteroids$Ship = F5(
-	function (a, b, c, d, e) {
-		return {x: a, y: b, velocity: c, acceleration: d, rotation: e};
+var _user$project$Asteroids$Model = F4(
+	function (a, b, c, d) {
+		return {ship: a, keyDowns: b, windowHeight: c, windowWidth: d};
 	});
+var _user$project$Asteroids$Ship = F7(
+	function (a, b, c, d, e, f, g) {
+		return {x: a, y: b, velocity: c, acceleration: d, rotation: e, bullets: f, shotFired: g};
+	});
+var _user$project$Asteroids$Bullet = F4(
+	function (a, b, c, d) {
+		return {x: a, y: b, velocity: c, rotation: d};
+	});
+var _user$project$Asteroids$Asteroid = F4(
+	function (a, b, c, d) {
+		return {x: a, y: b, velocity: c, rotation: d};
+	});
+var _user$project$Asteroids$KeyPresses = function (a) {
+	return {ctor: 'KeyPresses', _0: a};
+};
 var _user$project$Asteroids$KeyUp = function (a) {
 	return {ctor: 'KeyUp', _0: a};
 };
@@ -11611,7 +12374,11 @@ var _user$project$Asteroids$subscriptions = function (model) {
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$keyboard$Keyboard$ups(_user$project$Asteroids$KeyUp),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$keyboard$Keyboard$presses(_user$project$Asteroids$KeyPresses),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});

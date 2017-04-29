@@ -15,6 +15,8 @@ import Keyboard exposing (KeyCode)
 import AnimationFrame
 -- Using time as the type for animation frame diffs
 import Time exposing (Time)
+import Set exposing (Set)
+import Random
 
 
 main : Program Never Model Msg
@@ -30,6 +32,10 @@ main =
 
 type alias Model =
   { ship : Ship
+  -- , asteroids : List Asteroid
+  , keyDowns : Set KeyCode
+  , windowHeight : Int
+  , windowWidth : Int
   }
 
 -- Any thing that can move around the screen.
@@ -48,6 +54,22 @@ type alias Ship =
   , velocity : Float
   , acceleration : Float
   , rotation : Int
+  , bullets : List Bullet
+  , shotFired : Bool
+  }
+
+type alias Bullet =
+  { x : Float
+  , y : Float
+  , velocity : Float
+  , rotation : Int
+  }
+
+type alias Asteroid =
+  { x : Float
+  , y : Float
+  , velocity : Float
+  , rotation : Int
   }
 
 
@@ -58,13 +80,39 @@ spaceship =
   , velocity = 0
   , acceleration = 0
   , rotation = 0
+  , bullets = []
+  , shotFired = False
   }
 
 
 model : Model
 model =
   { ship = spaceship
+  -- , asteroids = newAsteroids 4 []
+  , keyDowns = Set.empty
+  , windowHeight = 500
+  , windowWidth = 500
   }
+
+
+-- newAsteroids : Int -> List Asteroid -> List Asteroid
+-- newAsteroids num acc =
+--   if num == 0 then
+--     acc
+--   else
+--     let
+--       (newX, seedX) = (Random.generate (Random.int -250 250) (Random.initialSeed 0))
+--       (newY, seedY) = (Random.generate (Random.int -250 250) (Random.initialSeed 0))
+--       (newVelocity, seedVelocity) = (Random.generate (Random.float 0 0.1) (Random.initialSeed 0))
+--       (newRotation, seedRotation) = (Random.generate (Random.int 0 359) (Random.initialSeed 0))
+--     in
+--       newAsteroids (num - 1)
+--       ({ x = newX
+--        , y = newY
+--        , velocity = newVelocity
+--        , rotation = newRotation
+--        } :: acc)
+
 
 -- INIT
 
@@ -78,119 +126,199 @@ type Msg =
   Delta Time
   | KeyDown KeyCode
   | KeyUp KeyCode
+  | KeyPresses KeyCode
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     KeyDown keyCode ->
-      (keyDown keyCode model, Cmd.none)
+      ({ model | keyDowns = Set.insert keyCode model.keyDowns }, Cmd.none)
 
     KeyUp keyCode ->
-      (keyUp keyCode model, Cmd.none)
+      ({ model | keyDowns = Set.remove keyCode model.keyDowns }, Cmd.none)
+
+    KeyPresses keyCode ->
+      (keyPress keyCode model, Cmd.none)
 
     Delta dt ->
-      (applyPhysics dt model, Cmd.none)
+      (applyPhysics dt (checkKeys model), Cmd.none)
 
 
-keyDown : KeyCode -> Model -> Model
-keyDown keyCode model =
+keyPress : KeyCode -> Model -> Model
+keyPress keyCode model =
   case keyCode of
     -- Space
-    -- 32 ->
-    --   { model | ship = fireShot model.ship }
-    -- ArowLeft
-    37 ->
-      let
-        { ship } = model
-        newShip =
-          updateAccelerationShip -0.0001 ship
-      in
-        { model | ship = newShip }
-    -- ArrowRight
-    39 ->
-      let
-        { ship } = model
-        newShip =
-          updateAccelerationShip 0.0001 ship
-      in
-        { model | ship = newShip }
-    -- ArrowUp
-    38 ->
-      let
-        { ship } = model
-        newShip =
-          updateRotationShip 1 ship
-      in
-        { model | ship = newShip }
-    -- ArrowDown
-    40 ->
-      let
-        { ship } = model
-        newShip =
-          updateRotationShip -1 ship
-      in
-        { model | ship = newShip }
+    -- If the space button has been pressed we can fire another shot.
+    32 ->
+      if Set.member 32 model.keyDowns && not model.ship.shotFired then
+        { model | ship = fireShot model.ship }
+      else
+        model
 
     _ ->
       model
 
 
--- Currently no key up messages are needed.
-keyUp : KeyCode -> Model -> Model
-keyUp keyCode model =
-  case keyCode of
+-- Checks which keys are down and applies proper functions
+checkKeys : Model -> Model
+checkKeys model =
+  let
+    { ship } = model
+    -- Check to rest ship shot fired
+    newShip =
+      if not (Set.member 32 model.keyDowns) && model.ship.shotFired then
+        { ship | shotFired = False }
+      else
+        ship
+    -- Check the rest of our keys
+    newModel = checkKeysHelper { model | ship = newShip } (Set.toList model.keyDowns)
+  in
+    newModel
 
-    _ ->
-      model
+
+checkKeysHelper : Model -> List KeyCode -> Model
+checkKeysHelper model keyCodes =
+  if List.isEmpty keyCodes then
+    model
+  else
+    let
+      keyCode = Maybe.withDefault -1 (List.head keyCodes)
+      rest = Maybe.withDefault [] (List.tail keyCodes)
+    in
+      if not (keyCode == -1) then
+        case keyCode of
+          -- ArrowLeft
+          37 ->
+            let
+              { ship } = model
+              newShip =
+                updateAccelerationShip -0.0001 ship
+            in
+              checkKeysHelper { model | ship = newShip } rest
+          -- ArrowRight
+          39 ->
+            let
+              { ship } = model
+              newShip =
+                updateAccelerationShip 0.0001 ship
+            in
+              checkKeysHelper { model | ship = newShip } rest
+          -- ArrowUp
+          38 ->
+            let
+              { ship } = model
+              newShip =
+                updateRotationShip 3 ship
+            in
+              checkKeysHelper { model | ship = newShip } rest
+          -- ArrowDown
+          40 ->
+            let
+              { ship } = model
+              newShip =
+                updateRotationShip -3 ship
+            in
+              checkKeysHelper { model | ship = newShip } rest
+
+          _ ->
+            checkKeysHelper model rest
+        else
+          checkKeysHelper model rest
 
 
 -- Applies velocity and position to our objects.
 applyPhysics : Float -> Model -> Model
 applyPhysics dt model =
-  { model | ship = applyPhysicsHelper dt model.ship }
+  let
+    { ship } = model
+    newShip = applyPhysicsShip dt ship
+    { bullets } = newShip
+    newBullets = applyPhysicsBullets model dt bullets
+  in
+    { model | ship = { newShip | bullets = newBullets } }
 
-applyPhysicsHelper : Float -> PhysicsObject a -> PhysicsObject a
-applyPhysicsHelper dt phyObj =
+
+applyPhysicsShip : Float -> Ship -> Ship
+applyPhysicsShip dt ship =
   let
     calculatedVelocity =
-      phyObj.velocity + phyObj.acceleration * dt
+      ship.velocity + ship.acceleration * dt
 
     newVelocity =
-        if calculatedVelocity >= 0 && calculatedVelocity <= 0.1 then
+        if calculatedVelocity >= 0 && calculatedVelocity <= 0.2 then
           calculatedVelocity
         else if calculatedVelocity < 0 then
           0
         else
-          0.1
+          0.2
 
     calculatedXPosition =
-      phyObj.x + dt * cos (degrees (toFloat phyObj.rotation)) * newVelocity
+      1/2 * ship.acceleration * dt * dt + cos (degrees (toFloat ship.rotation)) * newVelocity * dt + ship.x
 
     newXPosition =
-      if calculatedXPosition >= -500 && calculatedXPosition <= 500 then
+      if calculatedXPosition >= -(toFloat model.windowWidth) / 2 && calculatedXPosition <= (toFloat model.windowWidth) / 2 then
         calculatedXPosition
-      else if calculatedXPosition < -500 then
-        500
+      else if calculatedXPosition < -(toFloat model.windowWidth) / 2 then
+        (toFloat model.windowWidth) / 2
       else
-        -500
+        -(toFloat model.windowWidth) / 2
 
     calculatedYPosition =
-      phyObj.y + dt * sin (degrees (toFloat phyObj.rotation)) * newVelocity
+      1/2 * ship.acceleration * dt * dt + sin (degrees (toFloat ship.rotation)) * newVelocity * dt + ship.y
 
     newYPosition =
-      if calculatedYPosition >= -500 && calculatedYPosition <= 500 then
+      if calculatedYPosition >= -(toFloat model.windowHeight) / 2 && calculatedYPosition <= (toFloat model.windowHeight) / 2 then
         calculatedYPosition
-      else if calculatedYPosition < -500 then
-        500
+      else if calculatedYPosition < -(toFloat model.windowHeight) / 2 then
+        (toFloat model.windowHeight) / 2
       else
-        -500
+        -(toFloat model.windowHeight) / 2
   in
-    { phyObj |
+    { ship |
         x = newXPosition,
         y = newYPosition,
         velocity = newVelocity
     }
+
+
+applyPhysicsBullets : Model -> Float -> List Bullet -> List Bullet
+applyPhysicsBullets model dt bullets =
+  List.map (applyBulletPhysics dt) (checkBulletOutOfBounds model bullets [])
+
+
+applyBulletPhysics : Float -> Bullet -> Bullet
+applyBulletPhysics dt bullet =
+  let
+    { velocity } = bullet
+    calculatedXPosition =
+      cos (degrees (toFloat bullet.rotation)) * velocity * dt + bullet.x
+
+    calculatedYPosition =
+      sin (degrees (toFloat bullet.rotation)) * velocity * dt + bullet.y
+  in
+    { bullet
+    | x = calculatedXPosition
+    , y = calculatedYPosition
+    }
+
+
+checkBulletOutOfBounds : Model -> List Bullet -> List Bullet -> List Bullet
+checkBulletOutOfBounds model bullets acc =
+  if List.isEmpty bullets then
+    acc
+  else
+    let
+      bullet : Bullet
+      bullet = Maybe.withDefault badBullet (List.head bullets)
+      rest = Maybe.withDefault [] (List.tail bullets)
+    in
+      if bullet.x >= -(toFloat model.windowWidth) / 2 && bullet.x <= (toFloat model.windowWidth) / 2  &&
+          bullet.y >= -(toFloat model.windowHeight) / 2 && bullet.y <= (toFloat model.windowHeight) / 2  then
+        checkBulletOutOfBounds model rest (bullet :: acc)
+      else
+        checkBulletOutOfBounds model rest acc
+
 
 updateAccelerationShip : Float -> Ship -> Ship
 updateAccelerationShip addAcceleration ship =
@@ -199,7 +327,9 @@ updateAccelerationShip addAcceleration ship =
       ship.acceleration + addAcceleration
 
     newAcceleration =
-      if calculatedAcceleration >= -0.001 && calculatedAcceleration <= 0.001 then
+      if ship.velocity <= 0 && calculatedAcceleration <= 0 then
+        0
+      else if calculatedAcceleration >= -0.001 && calculatedAcceleration <= 0.001 then
         calculatedAcceleration
       else if calculatedAcceleration < -0.001 then
         -0.001
@@ -219,10 +349,22 @@ updateRotationShip addRot ship =
   { ship | rotation = (ship.rotation + addRot) % 360 }
 
 
--- fireShot : Ship -> Ship
--- fireShot ship =
---     { ship | shots = ship.shots + 1 }
-
+-- Create a new bullet and add it to our list of bullets for our ship.
+fireShot : Ship -> Ship
+fireShot ship =
+  let
+    { bullets } = ship
+    newBullets =
+      { x = ship.x
+      , y = ship.y
+      , velocity = 0.3
+      , rotation = ship.rotation
+      } :: bullets
+  in
+    { ship
+    | bullets = newBullets
+    , shotFired = True
+    }
 
 
 -- VIEW
@@ -230,18 +372,45 @@ updateRotationShip addRot ship =
 -- Draws a black box and a circle that you can control
 view : Model -> Html Msg
 view model =
+  -- Html.text (toString model)
   let
     { ship } = model
+    { bullets } = ship
   in
     toHtml <|
-      container 1000 1000 middle <|
-        collage 1000 1000
-          [ rect 1000 1000
+      container model.windowWidth model.windowHeight middle <|
+        collage model.windowWidth model.windowHeight
+          ([ rect (toFloat model.windowWidth) (toFloat model.windowHeight)
               |> filled (rgb 0 0 0)
           , oval 15 15
               |> filled white
               |> move (ship.x, ship.y)
-          ]
+          ] ++ (showBullets bullets []))
+
+
+badBullet : Bullet
+badBullet =
+  { x = -1
+  , y = -1
+  , velocity = -1
+  , rotation = -1
+  }
+
+
+showBullets : List Bullet -> List Form -> List Form
+showBullets bullets acc =
+  if List.isEmpty bullets then
+    acc
+  else
+    let
+      bullet : Bullet
+      bullet = Maybe.withDefault badBullet (List.head bullets)
+      rest = Maybe.withDefault [] (List.tail bullets)
+    in
+      if not (bullet == badBullet) then
+        showBullets rest ((move (bullet.x, bullet.y) (filled red (oval 5 5))) :: acc)
+      else
+        showBullets rest acc
 
 
 -- SUBSCRIPTIONS
@@ -252,4 +421,5 @@ subscriptions model =
     [ AnimationFrame.diffs Delta
     , Keyboard.downs KeyDown
     , Keyboard.ups KeyUp
+    , Keyboard.presses KeyPresses
     ]
