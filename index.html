@@ -9335,6 +9335,120 @@ var _elm_lang$html$Html$details = _elm_lang$html$Html$node('details');
 var _elm_lang$html$Html$summary = _elm_lang$html$Html$node('summary');
 var _elm_lang$html$Html$menuitem = _elm_lang$html$Html$node('menuitem');
 var _elm_lang$html$Html$menu = _elm_lang$html$Html$node('menu');
+var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _elm_lang$html$Html_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$bool);
+var _elm_lang$html$Html_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
+var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
+var _elm_lang$html$Html_Events$onFocus = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'focus',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onBlur = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'blur',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
+	_elm_lang$html$Html_Events$defaultOptions,
+	{preventDefault: true});
+var _elm_lang$html$Html_Events$onSubmit = function (msg) {
+	return A3(
+		_elm_lang$html$Html_Events$onWithOptions,
+		'submit',
+		_elm_lang$html$Html_Events$onSubmitOptions,
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onCheck = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'change',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
+};
+var _elm_lang$html$Html_Events$onInput = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'input',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
+};
+var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseout',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseover',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseleave',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseenter',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseup',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mousedown',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'dblclick',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'click',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});
 var _elm_lang$keyboard$Keyboard$onSelfMsg = F3(
 	function (router, _p0, state) {
 		var _p1 = _p0;
@@ -11944,102 +12058,153 @@ var _evancz$elm_graphics$Collage$ngon = F2(
 				f,
 				A2(_elm_lang$core$List$range, 0, n - 1)));
 	});
-var _user$project$Asteroids$badBullet = {x: -1, y: -1, velocity: -1, rotation: -1};
-var _user$project$Asteroids$showBullets = F2(
-	function (bullets, acc) {
-		showBullets:
+var _user$project$Asteroids$showDrawables = F4(
+	function (shapeColor, shape, drawables, acc) {
+		showDrawables:
 		while (true) {
-			if (_elm_lang$core$List$isEmpty(bullets)) {
-				return acc;
+			var _p0 = drawables;
+			if (_p0.ctor === '::') {
+				var _p1 = _p0._0;
+				var _v1 = shapeColor,
+					_v2 = shape,
+					_v3 = _p0._1,
+					_v4 = {
+					ctor: '::',
+					_0: A2(
+						_evancz$elm_graphics$Collage$move,
+						{ctor: '_Tuple2', _0: _p1.x, _1: _p1.y},
+						A2(_evancz$elm_graphics$Collage$filled, shapeColor, shape)),
+					_1: acc
+				};
+				shapeColor = _v1;
+				shape = _v2;
+				drawables = _v3;
+				acc = _v4;
+				continue showDrawables;
 			} else {
-				var rest = A2(
-					_elm_lang$core$Maybe$withDefault,
-					{ctor: '[]'},
-					_elm_lang$core$List$tail(bullets));
-				var bullet = A2(
-					_elm_lang$core$Maybe$withDefault,
-					_user$project$Asteroids$badBullet,
-					_elm_lang$core$List$head(bullets));
-				if (!_elm_lang$core$Native_Utils.eq(bullet, _user$project$Asteroids$badBullet)) {
-					var _v0 = rest,
-						_v1 = {
-						ctor: '::',
-						_0: A2(
-							_evancz$elm_graphics$Collage$move,
-							{ctor: '_Tuple2', _0: bullet.x, _1: bullet.y},
-							A2(
-								_evancz$elm_graphics$Collage$filled,
-								_elm_lang$core$Color$red,
-								A2(_evancz$elm_graphics$Collage$oval, 5, 5))),
-						_1: acc
-					};
-					bullets = _v0;
-					acc = _v1;
-					continue showBullets;
-				} else {
-					var _v2 = rest,
-						_v3 = acc;
-					bullets = _v2;
-					acc = _v3;
-					continue showBullets;
-				}
+				return acc;
 			}
 		}
 	});
-var _user$project$Asteroids$view = function (model) {
-	var _p0 = model;
-	var ship = _p0.ship;
-	var _p1 = ship;
-	var bullets = _p1.bullets;
-	return _evancz$elm_graphics$Element$toHtml(
-		A4(
-			_evancz$elm_graphics$Element$container,
-			model.windowWidth,
-			model.windowHeight,
-			_evancz$elm_graphics$Element$middle,
-			A3(
-				_evancz$elm_graphics$Collage$collage,
-				model.windowWidth,
-				model.windowHeight,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					{
-						ctor: '::',
-						_0: A2(
-							_evancz$elm_graphics$Collage$filled,
-							A3(_elm_lang$core$Color$rgb, 0, 0, 0),
-							A2(
-								_evancz$elm_graphics$Collage$rect,
-								_elm_lang$core$Basics$toFloat(model.windowWidth),
-								_elm_lang$core$Basics$toFloat(model.windowHeight))),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_evancz$elm_graphics$Collage$move,
-								{ctor: '_Tuple2', _0: ship.x, _1: ship.y},
-								A2(
-									_evancz$elm_graphics$Collage$filled,
-									_elm_lang$core$Color$white,
-									A2(_evancz$elm_graphics$Collage$oval, 15, 15))),
-							_1: {ctor: '[]'}
-						}
-					},
-					A2(
-						_user$project$Asteroids$showBullets,
-						bullets,
-						{ctor: '[]'})))));
-};
-var _user$project$Asteroids$fireShot = function (ship) {
-	var _p2 = ship;
-	var bullets = _p2.bullets;
-	var newBullets = {
-		ctor: '::',
-		_0: {x: ship.x, y: ship.y, velocity: 0.3, rotation: ship.rotation},
-		_1: bullets
-	};
+var _user$project$Asteroids$drawableInDrawable = F2(
+	function (drawableOne, drawableTwo) {
+		var distance = Math.pow(drawableOne.x - drawableTwo.x, 2) + Math.pow(drawableOne.y - drawableTwo.y, 2);
+		var radius = Math.pow(
+			_elm_lang$core$Basics$toFloat(drawableTwo.shapeDetails.shapeWidth) / 2,
+			2);
+		return _elm_lang$core$Native_Utils.cmp(distance, radius) < 1;
+	});
+var _user$project$Asteroids$checkShipCollision = F2(
+	function (ship, asteroids) {
+		checkShipCollision:
+		while (true) {
+			var _p2 = asteroids;
+			if (_p2.ctor === '::') {
+				if (A2(_user$project$Asteroids$drawableInDrawable, ship, _p2._0)) {
+					return true;
+				} else {
+					var _v6 = ship,
+						_v7 = _p2._1;
+					ship = _v6;
+					asteroids = _v7;
+					continue checkShipCollision;
+				}
+			} else {
+				return false;
+			}
+		}
+	});
+var _user$project$Asteroids$checkBulletsInAsteroid = F3(
+	function (asteroid, bullets, bulletsAcc) {
+		checkBulletsInAsteroid:
+		while (true) {
+			var _p3 = bullets;
+			if (_p3.ctor === '::') {
+				var _p5 = _p3._1;
+				var _p4 = _p3._0;
+				if (A2(_user$project$Asteroids$drawableInDrawable, _p4, asteroid)) {
+					return {
+						ctor: '_Tuple2',
+						_0: false,
+						_1: A2(_elm_lang$core$Basics_ops['++'], bulletsAcc, _p5)
+					};
+				} else {
+					var _v9 = asteroid,
+						_v10 = _p5,
+						_v11 = {ctor: '::', _0: _p4, _1: bulletsAcc};
+					asteroid = _v9;
+					bullets = _v10;
+					bulletsAcc = _v11;
+					continue checkBulletsInAsteroid;
+				}
+			} else {
+				return {ctor: '_Tuple2', _0: true, _1: bulletsAcc};
+			}
+		}
+	});
+var _user$project$Asteroids$checkAsteroidBulletCollision = F3(
+	function (asteroids, bullets, asteroidsAcc) {
+		checkAsteroidBulletCollision:
+		while (true) {
+			var _p6 = asteroids;
+			if (_p6.ctor === '::') {
+				var _p9 = _p6._1;
+				var _p8 = _p6._0;
+				var _p7 = A3(
+					_user$project$Asteroids$checkBulletsInAsteroid,
+					_p8,
+					bullets,
+					{ctor: '[]'});
+				var keepAsteroid = _p7._0;
+				var newBullets = _p7._1;
+				if (keepAsteroid) {
+					var _v13 = _p9,
+						_v14 = newBullets,
+						_v15 = {ctor: '::', _0: _p8, _1: asteroidsAcc};
+					asteroids = _v13;
+					bullets = _v14;
+					asteroidsAcc = _v15;
+					continue checkAsteroidBulletCollision;
+				} else {
+					var _v16 = _p9,
+						_v17 = newBullets,
+						_v18 = asteroidsAcc;
+					asteroids = _v16;
+					bullets = _v17;
+					asteroidsAcc = _v18;
+					continue checkAsteroidBulletCollision;
+				}
+			} else {
+				return {ctor: '_Tuple2', _0: asteroidsAcc, _1: bullets};
+			}
+		}
+	});
+var _user$project$Asteroids$checkCollisions = function (model) {
+	var _p10 = A3(
+		_user$project$Asteroids$checkAsteroidBulletCollision,
+		model.asteroids,
+		model.ship.bullets,
+		{ctor: '[]'});
+	var asteroids = _p10._0;
+	var bullets = _p10._1;
+	var _p11 = model;
+	var ship = _p11.ship;
+	var menu = _p11.menu;
+	var _p12 = A2(_user$project$Asteroids$checkShipCollision, ship, asteroids) ? {ctor: '_Tuple2', _0: true, _1: 'You Lose'} : (_elm_lang$core$List$isEmpty(asteroids) ? {ctor: '_Tuple2', _0: true, _1: 'You Win!'} : {ctor: '_Tuple2', _0: false, _1: ''});
+	var endGame = _p12._0;
+	var message = _p12._1;
 	return _elm_lang$core$Native_Utils.update(
-		ship,
-		{bullets: newBullets, shotFired: true});
+		model,
+		{
+			asteroids: asteroids,
+			message: message,
+			menu: _elm_lang$core$Native_Utils.update(
+				menu,
+				{endGame: endGame}),
+			ship: _elm_lang$core$Native_Utils.update(
+				ship,
+				{bullets: bullets})
+		});
 };
 var _user$project$Asteroids$updateRotationShip = F2(
 	function (addRot, ship) {
@@ -12065,73 +12230,154 @@ var _user$project$Asteroids$updateAccelerationShip = F2(
 			ship,
 			{acceleration: newAcceleration});
 	});
+var _user$project$Asteroids$checkAsteroidOutOfBounds = F3(
+	function (model, asteroids, acc) {
+		checkAsteroidOutOfBounds:
+		while (true) {
+			var _p13 = asteroids;
+			if (_p13.ctor === '::') {
+				var _p14 = _p13._0;
+				var y = (_elm_lang$core$Native_Utils.cmp(
+					_p14.y,
+					(0 - _elm_lang$core$Basics$toFloat(model.windowHeight)) / 2) < 0) ? (_elm_lang$core$Basics$toFloat(model.windowHeight) / 2) : ((_elm_lang$core$Native_Utils.cmp(
+					_p14.y,
+					_elm_lang$core$Basics$toFloat(model.windowHeight) / 2) > 0) ? ((0 - _elm_lang$core$Basics$toFloat(model.windowHeight)) / 2) : _p14.y);
+				var x = (_elm_lang$core$Native_Utils.cmp(
+					_p14.x,
+					(0 - _elm_lang$core$Basics$toFloat(model.windowWidth)) / 2) < 0) ? (_elm_lang$core$Basics$toFloat(model.windowWidth) / 2) : ((_elm_lang$core$Native_Utils.cmp(
+					_p14.x,
+					_elm_lang$core$Basics$toFloat(model.windowWidth) / 2) > 0) ? ((0 - _elm_lang$core$Basics$toFloat(model.windowWidth)) / 2) : _p14.x);
+				var _v20 = model,
+					_v21 = _p13._1,
+					_v22 = {
+					ctor: '::',
+					_0: _elm_lang$core$Native_Utils.update(
+						_p14,
+						{x: x, y: y}),
+					_1: acc
+				};
+				model = _v20;
+				asteroids = _v21;
+				acc = _v22;
+				continue checkAsteroidOutOfBounds;
+			} else {
+				return acc;
+			}
+		}
+	});
 var _user$project$Asteroids$checkBulletOutOfBounds = F3(
 	function (model, bullets, acc) {
 		checkBulletOutOfBounds:
 		while (true) {
-			if (_elm_lang$core$List$isEmpty(bullets)) {
-				return acc;
-			} else {
-				var rest = A2(
-					_elm_lang$core$Maybe$withDefault,
-					{ctor: '[]'},
-					_elm_lang$core$List$tail(bullets));
-				var bullet = A2(
-					_elm_lang$core$Maybe$withDefault,
-					_user$project$Asteroids$badBullet,
-					_elm_lang$core$List$head(bullets));
+			var _p15 = bullets;
+			if (_p15.ctor === '::') {
+				var _p17 = _p15._1;
+				var _p16 = _p15._0;
 				if ((_elm_lang$core$Native_Utils.cmp(
-					bullet.x,
+					_p16.x,
 					(0 - _elm_lang$core$Basics$toFloat(model.windowWidth)) / 2) > -1) && ((_elm_lang$core$Native_Utils.cmp(
-					bullet.x,
+					_p16.x,
 					_elm_lang$core$Basics$toFloat(model.windowWidth) / 2) < 1) && ((_elm_lang$core$Native_Utils.cmp(
-					bullet.y,
+					_p16.y,
 					(0 - _elm_lang$core$Basics$toFloat(model.windowHeight)) / 2) > -1) && (_elm_lang$core$Native_Utils.cmp(
-					bullet.y,
+					_p16.y,
 					_elm_lang$core$Basics$toFloat(model.windowHeight) / 2) < 1)))) {
-					var _v4 = model,
-						_v5 = rest,
-						_v6 = {ctor: '::', _0: bullet, _1: acc};
-					model = _v4;
-					bullets = _v5;
-					acc = _v6;
+					var _v24 = model,
+						_v25 = _p17,
+						_v26 = {ctor: '::', _0: _p16, _1: acc};
+					model = _v24;
+					bullets = _v25;
+					acc = _v26;
 					continue checkBulletOutOfBounds;
 				} else {
-					var _v7 = model,
-						_v8 = rest,
-						_v9 = acc;
-					model = _v7;
-					bullets = _v8;
-					acc = _v9;
+					var _v27 = model,
+						_v28 = _p17,
+						_v29 = acc;
+					model = _v27;
+					bullets = _v28;
+					acc = _v29;
 					continue checkBulletOutOfBounds;
 				}
+			} else {
+				return acc;
 			}
 		}
 	});
-var _user$project$Asteroids$applyBulletPhysics = F2(
-	function (dt, bullet) {
-		var _p3 = bullet;
-		var velocity = _p3.velocity;
+var _user$project$Asteroids$applyObjectPhysicsHelper = F2(
+	function (dt, physObj) {
+		var _p18 = physObj;
+		var velocity = _p18.velocity;
 		var calculatedXPosition = ((_elm_lang$core$Basics$cos(
 			_elm_lang$core$Basics$degrees(
-				_elm_lang$core$Basics$toFloat(bullet.rotation))) * velocity) * dt) + bullet.x;
+				_elm_lang$core$Basics$toFloat(physObj.rotation))) * velocity) * dt) + physObj.x;
 		var calculatedYPosition = ((_elm_lang$core$Basics$sin(
 			_elm_lang$core$Basics$degrees(
-				_elm_lang$core$Basics$toFloat(bullet.rotation))) * velocity) * dt) + bullet.y;
+				_elm_lang$core$Basics$toFloat(physObj.rotation))) * velocity) * dt) + physObj.y;
 		return _elm_lang$core$Native_Utils.update(
-			bullet,
+			physObj,
 			{x: calculatedXPosition, y: calculatedYPosition});
 	});
-var _user$project$Asteroids$applyPhysicsBullets = F3(
-	function (model, dt, bullets) {
+var _user$project$Asteroids$applyObjectPhysics = F3(
+	function (model, dt, physObjs) {
 		return A2(
 			_elm_lang$core$List$map,
-			_user$project$Asteroids$applyBulletPhysics(dt),
-			A3(
-				_user$project$Asteroids$checkBulletOutOfBounds,
-				model,
-				bullets,
-				{ctor: '[]'}));
+			_user$project$Asteroids$applyObjectPhysicsHelper(dt),
+			physObjs);
+	});
+var _user$project$Asteroids$applyPhysicsShip = F3(
+	function (dt, ship, model) {
+		var calculatedVelocity = ship.velocity + (ship.acceleration * dt);
+		var newVelocity = ((_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0) > -1) && (_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0.15) < 1)) ? calculatedVelocity : ((_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0) < 0) ? 0 : 0.15);
+		var calculatedXPosition = (((((1 / 2) * ship.acceleration) * dt) * dt) + ((_elm_lang$core$Basics$cos(
+			_elm_lang$core$Basics$degrees(
+				_elm_lang$core$Basics$toFloat(ship.rotation))) * newVelocity) * dt)) + ship.x;
+		var newXPosition = ((_elm_lang$core$Native_Utils.cmp(
+			calculatedXPosition,
+			(0 - _elm_lang$core$Basics$toFloat(model.windowWidth)) / 2) > -1) && (_elm_lang$core$Native_Utils.cmp(
+			calculatedXPosition,
+			_elm_lang$core$Basics$toFloat(model.windowWidth) / 2) < 1)) ? calculatedXPosition : ((_elm_lang$core$Native_Utils.cmp(
+			calculatedXPosition,
+			(0 - _elm_lang$core$Basics$toFloat(model.windowWidth)) / 2) < 0) ? (_elm_lang$core$Basics$toFloat(model.windowWidth) / 2) : ((0 - _elm_lang$core$Basics$toFloat(model.windowWidth)) / 2));
+		var calculatedYPosition = (((((1 / 2) * ship.acceleration) * dt) * dt) + ((_elm_lang$core$Basics$sin(
+			_elm_lang$core$Basics$degrees(
+				_elm_lang$core$Basics$toFloat(ship.rotation))) * newVelocity) * dt)) + ship.y;
+		var newYPosition = ((_elm_lang$core$Native_Utils.cmp(
+			calculatedYPosition,
+			(0 - _elm_lang$core$Basics$toFloat(model.windowHeight)) / 2) > -1) && (_elm_lang$core$Native_Utils.cmp(
+			calculatedYPosition,
+			_elm_lang$core$Basics$toFloat(model.windowHeight) / 2) < 1)) ? calculatedYPosition : ((_elm_lang$core$Native_Utils.cmp(
+			calculatedYPosition,
+			(0 - _elm_lang$core$Basics$toFloat(model.windowHeight)) / 2) < 0) ? (_elm_lang$core$Basics$toFloat(model.windowHeight) / 2) : ((0 - _elm_lang$core$Basics$toFloat(model.windowHeight)) / 2));
+		return _elm_lang$core$Native_Utils.update(
+			ship,
+			{x: newXPosition, y: newYPosition, velocity: newVelocity});
+	});
+var _user$project$Asteroids$applyPhysics = F2(
+	function (dt, model) {
+		var _p19 = model;
+		var ship = _p19.ship;
+		var asteroids = _p19.asteroids;
+		var newShip = A3(_user$project$Asteroids$applyPhysicsShip, dt, ship, model);
+		var _p20 = newShip;
+		var bullets = _p20.bullets;
+		var newBullets = A3(
+			_user$project$Asteroids$checkBulletOutOfBounds,
+			model,
+			A3(_user$project$Asteroids$applyObjectPhysics, model, dt, bullets),
+			{ctor: '[]'});
+		var newAsteroids = A3(
+			_user$project$Asteroids$checkAsteroidOutOfBounds,
+			model,
+			A3(_user$project$Asteroids$applyObjectPhysics, model, dt, asteroids),
+			{ctor: '[]'});
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				ship: _elm_lang$core$Native_Utils.update(
+					newShip,
+					{bullets: newBullets}),
+				asteroids: newAsteroids
+			});
 	});
 var _user$project$Asteroids$checkKeysHelper = F2(
 	function (model, keyCodes) {
@@ -12149,72 +12395,72 @@ var _user$project$Asteroids$checkKeysHelper = F2(
 					-1,
 					_elm_lang$core$List$head(keyCodes));
 				if (!_elm_lang$core$Native_Utils.eq(keyCode, -1)) {
-					var _p4 = keyCode;
-					switch (_p4) {
+					var _p21 = keyCode;
+					switch (_p21) {
 						case 37:
-							var _p5 = model;
-							var ship = _p5.ship;
+							var _p22 = model;
+							var ship = _p22.ship;
 							var newShip = A2(_user$project$Asteroids$updateAccelerationShip, -1.0e-4, ship);
-							var _v11 = _elm_lang$core$Native_Utils.update(
+							var _v31 = _elm_lang$core$Native_Utils.update(
 								model,
 								{ship: newShip}),
-								_v12 = rest;
-							model = _v11;
-							keyCodes = _v12;
+								_v32 = rest;
+							model = _v31;
+							keyCodes = _v32;
 							continue checkKeysHelper;
 						case 39:
-							var _p6 = model;
-							var ship = _p6.ship;
+							var _p23 = model;
+							var ship = _p23.ship;
 							var newShip = A2(_user$project$Asteroids$updateAccelerationShip, 1.0e-4, ship);
-							var _v13 = _elm_lang$core$Native_Utils.update(
+							var _v33 = _elm_lang$core$Native_Utils.update(
 								model,
 								{ship: newShip}),
-								_v14 = rest;
-							model = _v13;
-							keyCodes = _v14;
+								_v34 = rest;
+							model = _v33;
+							keyCodes = _v34;
 							continue checkKeysHelper;
 						case 38:
-							var _p7 = model;
-							var ship = _p7.ship;
+							var _p24 = model;
+							var ship = _p24.ship;
 							var newShip = A2(_user$project$Asteroids$updateRotationShip, 3, ship);
-							var _v15 = _elm_lang$core$Native_Utils.update(
+							var _v35 = _elm_lang$core$Native_Utils.update(
 								model,
 								{ship: newShip}),
-								_v16 = rest;
-							model = _v15;
-							keyCodes = _v16;
+								_v36 = rest;
+							model = _v35;
+							keyCodes = _v36;
 							continue checkKeysHelper;
 						case 40:
-							var _p8 = model;
-							var ship = _p8.ship;
+							var _p25 = model;
+							var ship = _p25.ship;
 							var newShip = A2(_user$project$Asteroids$updateRotationShip, -3, ship);
-							var _v17 = _elm_lang$core$Native_Utils.update(
+							var _v37 = _elm_lang$core$Native_Utils.update(
 								model,
 								{ship: newShip}),
-								_v18 = rest;
-							model = _v17;
-							keyCodes = _v18;
+								_v38 = rest;
+							model = _v37;
+							keyCodes = _v38;
 							continue checkKeysHelper;
 						default:
-							var _v19 = model,
-								_v20 = rest;
-							model = _v19;
-							keyCodes = _v20;
+							var _v39 = model,
+								_v40 = rest;
+							model = _v39;
+							keyCodes = _v40;
 							continue checkKeysHelper;
 					}
 				} else {
-					var _v21 = model,
-						_v22 = rest;
-					model = _v21;
-					keyCodes = _v22;
+					var _v41 = model,
+						_v42 = rest;
+					model = _v41;
+					keyCodes = _v42;
 					continue checkKeysHelper;
 				}
 			}
 		}
 	});
 var _user$project$Asteroids$checkKeys = function (model) {
-	var _p9 = model;
-	var ship = _p9.ship;
+	var _p26 = model;
+	var ship = _p26.ship;
 	var newShip = ((!A2(_elm_lang$core$Set$member, 32, model.keyDowns)) && model.ship.shotFired) ? _elm_lang$core$Native_Utils.update(
 		ship,
 		{shotFired: false}) : ship;
@@ -12226,19 +12472,134 @@ var _user$project$Asteroids$checkKeys = function (model) {
 		_elm_lang$core$Set$toList(model.keyDowns));
 	return newModel;
 };
-var _user$project$Asteroids$keyPress = F2(
-	function (keyCode, model) {
-		var _p10 = keyCode;
-		if (_p10 === 32) {
-			return (A2(_elm_lang$core$Set$member, 32, model.keyDowns) && (!model.ship.shotFired)) ? _elm_lang$core$Native_Utils.update(
-				model,
-				{
-					ship: _user$project$Asteroids$fireShot(model.ship)
-				}) : model;
-		} else {
-			return model;
+var _user$project$Asteroids$starShape = {shape: _evancz$elm_graphics$Collage$oval, shapeColor: _elm_lang$core$Color$yellow, shapeWidth: 2, shapeHeight: 2};
+var _user$project$Asteroids$createStars = F2(
+	function (num, model) {
+		createStars:
+		while (true) {
+			if (_elm_lang$core$Native_Utils.eq(num, 0)) {
+				var _p27 = model;
+				var menu = _p27.menu;
+				var newMenu = _elm_lang$core$Native_Utils.update(
+					menu,
+					{mainMenu: false, paused: false, endGame: false});
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{menu: newMenu});
+			} else {
+				var _p28 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$float, -250, 250),
+					model.seed);
+				var newX = _p28._0;
+				var seedX = _p28._1;
+				var _p29 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$float, -250, 250),
+					seedX);
+				var newY = _p29._0;
+				var seedY = _p29._1;
+				var stars = {
+					ctor: '::',
+					_0: {x: newX, y: newY, shapeDetails: _user$project$Asteroids$starShape},
+					_1: model.stars
+				};
+				var _v43 = num - 1,
+					_v44 = _elm_lang$core$Native_Utils.update(
+					model,
+					{stars: stars, seed: seedY});
+				num = _v43;
+				model = _v44;
+				continue createStars;
+			}
 		}
 	});
+var _user$project$Asteroids$asteroidShape = {shape: _evancz$elm_graphics$Collage$oval, shapeColor: _elm_lang$core$Color$grey, shapeWidth: 60, shapeHeight: 60};
+var _user$project$Asteroids$createAsteroids = F2(
+	function (num, model) {
+		createAsteroids:
+		while (true) {
+			if (_elm_lang$core$Native_Utils.eq(num, 0)) {
+				return model;
+			} else {
+				var _p30 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$float, -250, 250),
+					model.seed);
+				var newX = _p30._0;
+				var seedX = _p30._1;
+				var _p31 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$float, -250, 250),
+					seedX);
+				var newY = _p31._0;
+				var seedY = _p31._1;
+				var _p32 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$float, 0, 0.1),
+					seedY);
+				var newVelocity = _p32._0;
+				var seedVelocity = _p32._1;
+				var _p33 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$int, 0, 359),
+					seedVelocity);
+				var newRotation = _p33._0;
+				var seedRotation = _p33._1;
+				var asteroids = {
+					ctor: '::',
+					_0: {x: newX, y: newY, velocity: newVelocity, rotation: newRotation, shapeDetails: _user$project$Asteroids$asteroidShape},
+					_1: model.asteroids
+				};
+				var _v45 = num - 1,
+					_v46 = _elm_lang$core$Native_Utils.update(
+					model,
+					{asteroids: asteroids, seed: seedRotation});
+				num = _v45;
+				model = _v46;
+				continue createAsteroids;
+			}
+		}
+	});
+var _user$project$Asteroids$bulletShape = {shape: _evancz$elm_graphics$Collage$oval, shapeColor: _elm_lang$core$Color$red, shapeWidth: 5, shapeHeight: 5};
+var _user$project$Asteroids$fireShot = function (ship) {
+	var _p34 = ship;
+	var bullets = _p34.bullets;
+	var newBullets = {
+		ctor: '::',
+		_0: {x: ship.x, y: ship.y, velocity: 0.3, rotation: ship.rotation, shapeDetails: _user$project$Asteroids$bulletShape},
+		_1: bullets
+	};
+	return _elm_lang$core$Native_Utils.update(
+		ship,
+		{bullets: newBullets, shotFired: true});
+};
+var _user$project$Asteroids$keyPress = F2(
+	function (keyCode, model) {
+		var _p35 = keyCode;
+		switch (_p35) {
+			case 27:
+				var paused = !model.menu.paused;
+				var _p36 = model;
+				var menu = _p36.menu;
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						menu: _elm_lang$core$Native_Utils.update(
+							menu,
+							{paused: paused})
+					});
+			case 32:
+				return (A2(_elm_lang$core$Set$member, 32, model.keyDowns) && (!model.ship.shotFired)) ? _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						ship: _user$project$Asteroids$fireShot(model.ship)
+					}) : model;
+			default:
+				return model;
+		}
+	});
+var _user$project$Asteroids$spaceshipShape = {shape: _evancz$elm_graphics$Collage$oval, shapeColor: _elm_lang$core$Color$white, shapeWidth: 15, shapeHeight: 15};
 var _user$project$Asteroids$spaceship = {
 	x: 0,
 	y: 0,
@@ -12246,65 +12607,51 @@ var _user$project$Asteroids$spaceship = {
 	acceleration: 0,
 	rotation: 0,
 	bullets: {ctor: '[]'},
-	shotFired: false
+	shotFired: false,
+	shapeDetails: _user$project$Asteroids$spaceshipShape
 };
-var _user$project$Asteroids$model = {ship: _user$project$Asteroids$spaceship, keyDowns: _elm_lang$core$Set$empty, windowHeight: 500, windowWidth: 500};
-var _user$project$Asteroids$init = {ctor: '_Tuple2', _0: _user$project$Asteroids$model, _1: _elm_lang$core$Platform_Cmd$none};
-var _user$project$Asteroids$applyPhysicsShip = F2(
-	function (dt, ship) {
-		var calculatedVelocity = ship.velocity + (ship.acceleration * dt);
-		var newVelocity = ((_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0) > -1) && (_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0.2) < 1)) ? calculatedVelocity : ((_elm_lang$core$Native_Utils.cmp(calculatedVelocity, 0) < 0) ? 0 : 0.2);
-		var calculatedXPosition = (((((1 / 2) * ship.acceleration) * dt) * dt) + ((_elm_lang$core$Basics$cos(
-			_elm_lang$core$Basics$degrees(
-				_elm_lang$core$Basics$toFloat(ship.rotation))) * newVelocity) * dt)) + ship.x;
-		var newXPosition = ((_elm_lang$core$Native_Utils.cmp(
-			calculatedXPosition,
-			(0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowWidth)) / 2) > -1) && (_elm_lang$core$Native_Utils.cmp(
-			calculatedXPosition,
-			_elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowWidth) / 2) < 1)) ? calculatedXPosition : ((_elm_lang$core$Native_Utils.cmp(
-			calculatedXPosition,
-			(0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowWidth)) / 2) < 0) ? (_elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowWidth) / 2) : ((0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowWidth)) / 2));
-		var calculatedYPosition = (((((1 / 2) * ship.acceleration) * dt) * dt) + ((_elm_lang$core$Basics$sin(
-			_elm_lang$core$Basics$degrees(
-				_elm_lang$core$Basics$toFloat(ship.rotation))) * newVelocity) * dt)) + ship.y;
-		var newYPosition = ((_elm_lang$core$Native_Utils.cmp(
-			calculatedYPosition,
-			(0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowHeight)) / 2) > -1) && (_elm_lang$core$Native_Utils.cmp(
-			calculatedYPosition,
-			_elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowHeight) / 2) < 1)) ? calculatedYPosition : ((_elm_lang$core$Native_Utils.cmp(
-			calculatedYPosition,
-			(0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowHeight)) / 2) < 0) ? (_elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowHeight) / 2) : ((0 - _elm_lang$core$Basics$toFloat(_user$project$Asteroids$model.windowHeight)) / 2));
-		return _elm_lang$core$Native_Utils.update(
-			ship,
-			{x: newXPosition, y: newYPosition, velocity: newVelocity});
-	});
-var _user$project$Asteroids$applyPhysics = F2(
-	function (dt, model) {
-		var _p11 = model;
-		var ship = _p11.ship;
-		var newShip = A2(_user$project$Asteroids$applyPhysicsShip, dt, ship);
-		var _p12 = newShip;
-		var bullets = _p12.bullets;
-		var newBullets = A3(_user$project$Asteroids$applyPhysicsBullets, model, dt, bullets);
-		return _elm_lang$core$Native_Utils.update(
-			model,
-			{
-				ship: _elm_lang$core$Native_Utils.update(
-					newShip,
-					{bullets: newBullets})
-			});
-	});
+var _user$project$Asteroids$menuChoices = {mainMenu: true, paused: false, endGame: false};
+var _user$project$Asteroids$initialModel = {
+	menu: _user$project$Asteroids$menuChoices,
+	ship: _user$project$Asteroids$spaceship,
+	asteroids: {ctor: '[]'},
+	stars: {ctor: '[]'},
+	keyDowns: _elm_lang$core$Set$empty,
+	windowHeight: 500,
+	windowWidth: 500,
+	seed: _elm_lang$core$Random$initialSeed(0),
+	message: ''
+};
 var _user$project$Asteroids$update = F2(
 	function (msg, model) {
-		var _p13 = msg;
-		switch (_p13.ctor) {
+		var _p37 = msg;
+		switch (_p37.ctor) {
+			case 'InitialSeed':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							seed: _elm_lang$core$Random$initialSeed(_p37._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'StartGame':
+				return {
+					ctor: '_Tuple2',
+					_0: A2(
+						_user$project$Asteroids$createStars,
+						200,
+						A2(_user$project$Asteroids$createAsteroids, 1, _user$project$Asteroids$initialModel)),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'KeyDown':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							keyDowns: A2(_elm_lang$core$Set$insert, _p13._0, model.keyDowns)
+							keyDowns: A2(_elm_lang$core$Set$insert, _p37._0, model.keyDowns)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -12314,43 +12661,204 @@ var _user$project$Asteroids$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							keyDowns: A2(_elm_lang$core$Set$remove, _p13._0, model.keyDowns)
+							keyDowns: A2(_elm_lang$core$Set$remove, _p37._0, model.keyDowns)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'KeyPresses':
 				return {
 					ctor: '_Tuple2',
-					_0: A2(_user$project$Asteroids$keyPress, _p13._0, model),
+					_0: A2(_user$project$Asteroids$keyPress, _p37._0, model),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				return {
+				return ((!model.menu.mainMenu) && ((!model.menu.paused) && (!model.menu.endGame))) ? {
 					ctor: '_Tuple2',
-					_0: A2(
-						_user$project$Asteroids$applyPhysics,
-						_p13._0,
-						_user$project$Asteroids$checkKeys(model)),
+					_0: _user$project$Asteroids$checkCollisions(
+						A2(
+							_user$project$Asteroids$applyPhysics,
+							_p37._0,
+							_user$project$Asteroids$checkKeys(model))),
 					_1: _elm_lang$core$Platform_Cmd$none
-				};
+				} : {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
-var _user$project$Asteroids$Model = F4(
+var _user$project$Asteroids$Model = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {menu: a, ship: b, asteroids: c, stars: d, keyDowns: e, windowHeight: f, windowWidth: g, seed: h, message: i};
+	});
+var _user$project$Asteroids$ShapeDetails = F4(
 	function (a, b, c, d) {
-		return {ship: a, keyDowns: b, windowHeight: c, windowWidth: d};
+		return {shape: a, shapeColor: b, shapeWidth: c, shapeHeight: d};
 	});
-var _user$project$Asteroids$Ship = F7(
-	function (a, b, c, d, e, f, g) {
-		return {x: a, y: b, velocity: c, acceleration: d, rotation: e, bullets: f, shotFired: g};
+var _user$project$Asteroids$Menu = F3(
+	function (a, b, c) {
+		return {mainMenu: a, paused: b, endGame: c};
 	});
-var _user$project$Asteroids$Bullet = F4(
-	function (a, b, c, d) {
-		return {x: a, y: b, velocity: c, rotation: d};
+var _user$project$Asteroids$Ship = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {x: a, y: b, velocity: c, acceleration: d, rotation: e, bullets: f, shotFired: g, shapeDetails: h};
 	});
-var _user$project$Asteroids$Asteroid = F4(
-	function (a, b, c, d) {
-		return {x: a, y: b, velocity: c, rotation: d};
+var _user$project$Asteroids$Bullet = F5(
+	function (a, b, c, d, e) {
+		return {x: a, y: b, velocity: c, rotation: d, shapeDetails: e};
 	});
+var _user$project$Asteroids$Asteroid = F5(
+	function (a, b, c, d, e) {
+		return {x: a, y: b, velocity: c, rotation: d, shapeDetails: e};
+	});
+var _user$project$Asteroids$Star = F3(
+	function (a, b, c) {
+		return {x: a, y: b, shapeDetails: c};
+	});
+var _user$project$Asteroids$StartGame = {ctor: 'StartGame'};
+var _user$project$Asteroids$view = function (model) {
+	var _p38 = model;
+	var ship = _p38.ship;
+	var menu = _p38.menu;
+	var asteroids = _p38.asteroids;
+	var stars = _p38.stars;
+	var _p39 = ship;
+	var bullets = _p39.bullets;
+	return menu.mainMenu ? A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Asteroids'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Asteroids$StartGame),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Play'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		}) : ((menu.endGame || menu.paused) ? A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(model.message),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Asteroids$StartGame),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Restart'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		}) : _evancz$elm_graphics$Element$toHtml(
+		A4(
+			_evancz$elm_graphics$Element$container,
+			model.windowWidth,
+			model.windowHeight,
+			_evancz$elm_graphics$Element$middle,
+			A3(
+				_evancz$elm_graphics$Collage$collage,
+				model.windowWidth,
+				model.windowHeight,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					{
+						ctor: '::',
+						_0: A2(
+							_evancz$elm_graphics$Collage$filled,
+							A3(_elm_lang$core$Color$rgb, 0, 0, 0),
+							A2(
+								_evancz$elm_graphics$Collage$rect,
+								_elm_lang$core$Basics$toFloat(model.windowWidth),
+								_elm_lang$core$Basics$toFloat(model.windowHeight))),
+						_1: {ctor: '[]'}
+					},
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						A4(
+							_user$project$Asteroids$showDrawables,
+							_elm_lang$core$Color$yellow,
+							A2(_evancz$elm_graphics$Collage$oval, 2, 2),
+							stars,
+							{ctor: '[]'}),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							A4(
+								_user$project$Asteroids$showDrawables,
+								_elm_lang$core$Color$red,
+								A2(_evancz$elm_graphics$Collage$oval, 5, 5),
+								bullets,
+								{ctor: '[]'}),
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								{
+									ctor: '::',
+									_0: A2(
+										_evancz$elm_graphics$Collage$move,
+										{ctor: '_Tuple2', _0: ship.x, _1: ship.y},
+										A2(
+											_evancz$elm_graphics$Collage$filled,
+											_elm_lang$core$Color$white,
+											A2(_evancz$elm_graphics$Collage$oval, 15, 15))),
+									_1: {ctor: '[]'}
+								},
+								A4(
+									_user$project$Asteroids$showDrawables,
+									_elm_lang$core$Color$grey,
+									A2(_evancz$elm_graphics$Collage$oval, 60, 60),
+									asteroids,
+									{ctor: '[]'})))))))));
+};
+var _user$project$Asteroids$InitialSeed = function (a) {
+	return {ctor: 'InitialSeed', _0: a};
+};
+var _user$project$Asteroids$generateInitialSeed = A2(
+	_elm_lang$core$Random$generate,
+	_user$project$Asteroids$InitialSeed,
+	A2(_elm_lang$core$Random$int, _elm_lang$core$Random$minInt, _elm_lang$core$Random$maxInt));
+var _user$project$Asteroids$init = {ctor: '_Tuple2', _0: _user$project$Asteroids$initialModel, _1: _user$project$Asteroids$generateInitialSeed};
 var _user$project$Asteroids$KeyPresses = function (a) {
 	return {ctor: 'KeyPresses', _0: a};
 };
