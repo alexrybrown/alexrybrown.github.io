@@ -204,7 +204,7 @@ update msg model =
       ({ model | seed = Random.initialSeed val }, Cmd.none)
 
     StartGame ->
-      (createStars 200 (createAsteroids 1 initialModel), Cmd.none)
+      (createStars 200 (createAsteroids 10 initialModel), Cmd.none)
 
     KeyDown keyCode ->
       ({ model | keyDowns = Set.insert keyCode model.keyDowns }, Cmd.none)
